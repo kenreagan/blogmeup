@@ -1,10 +1,20 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from flask.views import MethodView
 from src.models import User, Posts
 from werkzeug.security import generate_password_hash
 from src import db
 
 api = Blueprint('api', __name__)
+
+
+@api.route('/users/post/<int:id>')
+def getuserposts(id):
+	posts = Posts.query.filter_by(author=id).all()
+	empt = []
+	for post in posts:
+		empt.append(post.to_json())
+		
+
 
 class ManagePosts(MethodView):
 	def put(self):
@@ -27,7 +37,9 @@ class ManagePosts(MethodView):
 		empt = []
 		for post in posts:
 			empt.append(post.to_json())
-		return jsonify({"posts": empt})
+		return {
+			"posts": empt
+		}
 		
 		
 	def delete(self):
@@ -38,6 +50,19 @@ class ManagePosts(MethodView):
 		return {
 			"Message": "Record Deletion success"
 		}
+		
+	def post(self):
+		data = dict(request.get_json())
+		title = data['title']
+		body = data['body']
+		author = int(data['author'])
+		post = Posts(title=title, body=body, author=author)
+		db.session.add(post)
+		db.session.commit()
+		return {
+			"Message": "Posts creation success"
+		}
+	
 	
 
 class ManageUsers(MethodView):
@@ -45,10 +70,8 @@ class ManageUsers(MethodView):
 		data = dict(request.get_json())
 		user_id = data['id']
 		username = data['name']
-		email = data['email']
 		user = User.query.filter_by(id=user_id).first()
 		user.name = username
-		user.email = email
 		db.session.commit()
 		return {
 			"message": "recorded update sucess" 
@@ -59,7 +82,9 @@ class ManageUsers(MethodView):
 		empt = []
 		for users in user:
 			empt.append(users.to_json())
-		return jsonify({"users": empt})
+		return {
+			"users": empt
+		}
 		
 	def delete(self):
 		data = dict(request.get_json())
@@ -69,7 +94,18 @@ class ManageUsers(MethodView):
 		return {
 			"Message": "Record Deletion success"
 		}
-
+	
+	def post(self):
+		data = dict(request.get_json())
+		name = data['name']
+		password = generate_password_hash(data['password'])
+		user = User(name=name, password=password)
+		db.session.add(user)
+		db.session.commit()
+		return {
+			"Message": "User creation success"
+		}
+		
 userinstance = ManageUsers.as_view('users')
 postsinstance = ManagePosts.as_view('posts')
 		

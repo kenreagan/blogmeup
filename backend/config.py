@@ -10,6 +10,7 @@ class ProductionConfig:
 	SECRET_KEY = os.urandom(10)
 	SQLALCHEMY_DATABASE_URI = os.path.join('sqlite:///'+ os.path.join(basedir, 'main.sqlite'))
 	SQLALCHEMY_TRACK_MODIFICATIONS = True
+	JSONIFY_PRETTYPRINT_REGULAR = True
 
 class TestingConfig:
 	DEBUG = True

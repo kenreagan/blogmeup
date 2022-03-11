@@ -12,11 +12,10 @@ class User(db.Model):
 	def __repr__(self):
 		return '<%d: %s>'%(self.id, self.name)
 	
-	def to_json():
+	def to_json(self):
 		return {
 			"id": self.id,
 			"name": self.name,
-			"email": self.email
 		}
 	
 	@staticmethod
@@ -36,10 +35,10 @@ class Posts(db.Model):
 	def __repr__(self):
 		return '<%d: %s>'%(self.id, self.title)
 	
-	def _to_json():
+	def to_json(self):
 		return {
-			"id": self.id,
+			"post id": self.id,
 			"title": self.title,
 			"body": self.body,
-			"author": self.author
+			"authors id": self.author
 		}
