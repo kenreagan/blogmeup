@@ -12,7 +12,7 @@ class User(db.Model):
 	def __repr__(self):
 		return '<%d: %s>'%(self.id, self.name)
 	
-	def _to_json():
+	def to_json():
 		return {
 			"id": self.id,
 			"name": self.name,

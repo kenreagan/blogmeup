@@ -7,7 +7,7 @@ from src import db
 api = Blueprint('api', __name__)
 
 class ManagePosts(MethodView):
-	def PUT(self):
+	def put(self):
 		data = dict(request.get_json())
 		post_id = data['id']
 		title = data['title']
@@ -22,7 +22,7 @@ class ManagePosts(MethodView):
 			"message": "recorded update sucess" 
 		}		
 	
-	def GET(self):
+	def get(self):
 		posts = Posts.query.all()
 		empt = []
 		for post in posts:
@@ -30,7 +30,7 @@ class ManagePosts(MethodView):
 		return jsonify({"posts": empt})
 		
 		
-	def DELETE(self):
+	def delete(self):
 		data = dict(request.get_json())
 		post = Posts.query.filter_by(id=data['id']).first()
 		db.session.delete(post)
@@ -41,7 +41,7 @@ class ManagePosts(MethodView):
 	
 
 class ManageUsers(MethodView):
-	def PUT(self):
+	def put(self):
 		data = dict(request.get_json())
 		user_id = data['id']
 		username = data['name']
@@ -54,14 +54,14 @@ class ManageUsers(MethodView):
 			"message": "recorded update sucess" 
 		}
 	
-	def GET(self):
+	def get(self):
 		user = User.query.all()
 		empt = []
 		for users in user:
 			empt.append(users.to_json())
 		return jsonify({"users": empt})
 		
-	def DELETE(self):
+	def delete(self):
 		data = dict(request.get_json())
 		user = User.query.filter_by(id=data['id']).first()
 		db.session.delete(user)
@@ -73,7 +73,7 @@ class ManageUsers(MethodView):
 userinstance = ManageUsers.as_view('users')
 postsinstance = ManagePosts.as_view('posts')
 		
-api.add_url_rule('/users/', view_func=userinstance, methods=['GET', 'POST', 'DELETE', 'PUT'])
-api.add_url_rule('/posts/', view_func=postsinstance, methods=['GET', 'POST', 'DELETE', 'PUT'])
+api.add_url_rule('/users/', view_func=userinstance)
+api.add_url_rule('/posts/', view_func=postsinstance)
 
 	
