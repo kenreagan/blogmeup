@@ -1,7 +1,7 @@
-from src import create_app
+from src import create_app, db
 import os
 
-app = create_app(config='config.ProductionConfig')
+app = create_app(config_file='config.ProductionConfig')
 
 
 if __name__ == '__main__':
